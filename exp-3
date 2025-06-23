@@ -1,0 +1,74 @@
+from collections import deque
+
+# Possible states: (A, B)
+# Capacity of jugs
+CAPACITY_A = 4
+CAPACITY_B = 3
+
+def is_goal(state):
+    return state[0] == 2
+
+def get_next_states(state):
+    a, b = state
+    successors = set()
+
+    # Fill Jug A
+    successors.add((CAPACITY_A, b))
+
+    # Fill Jug B
+    successors.add((a, CAPACITY_B))
+
+    # Empty Jug A
+    successors.add((0, b))
+
+    # Empty Jug B
+    successors.add((a, 0))
+
+    # Pour A → B
+    transfer = min(a, CAPACITY_B - b)
+    successors.add((a - transfer, b + transfer))
+
+    # Pour B → A
+    transfer = min(b, CAPACITY_A - a)
+    successors.add((a + transfer, b - transfer))
+
+    return successors
+
+def bfs(start):
+    queue = deque()
+    visited = set()
+    parent = {}
+
+    queue.append(start)
+    visited.add(start)
+    parent[start] = None
+
+    while queue:
+        current = queue.popleft()
+
+        if is_goal(current):
+            path = []
+            while current:
+                path.append(current)
+                current = parent[current]
+            path.reverse()
+            return path
+
+        for next_state in get_next_states(current):
+            if next_state not in visited:
+                visited.add(next_state)
+                parent[next_state] = current
+                queue.append(next_state)
+
+    return None
+
+# Starting state: both jugs empty
+solution_path = bfs((0, 0))
+
+# Print solution
+if solution_path:
+    print("Steps to reach goal (2 liters in Jug A):")
+    for step in solution_path:
+        print(f"Jug A: {step[0]} L, Jug B: {step[1]} L")
+else:
+    print("No solution found.")
