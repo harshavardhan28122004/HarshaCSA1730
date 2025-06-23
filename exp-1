@@ -1,0 +1,89 @@
+import heapq
+import numpy as np
+
+# Goal state
+goal_state = [[1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 0]]
+
+# Movement directions
+directions = {
+    'Up': (-1, 0),
+    'Down': (1, 0),
+    'Left': (0, -1),
+    'Right': (0, 1)
+}
+
+# Heuristic: Manhattan Distance
+def manhattan_distance(state, goal):
+    distance = 0
+    for i in range(3):
+        for j in range(3):
+            value = state[i][j]
+            if value != 0:
+                for x in range(3):
+                    for y in range(3):
+                        if goal[x][y] == value:
+                            distance += abs(x - i) + abs(y - j)
+    return distance
+
+# Convert state to a tuple (for hashing)
+def state_to_tuple(state):
+    return tuple(map(tuple, state))
+
+# Find position of 0
+def find_zero(state):
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] == 0:
+                return i, j
+
+# Generate new states from current state
+def get_neighbors(state):
+    neighbors = []
+    x, y = find_zero(state)
+    for move, (dx, dy) in directions.items():
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < 3 and 0 <= ny < 3:
+            new_state = [row[:] for row in state]
+            new_state[x][y], new_state[nx][ny] = new_state[nx][ny], new_state[x][y]
+            neighbors.append((new_state, move))
+    return neighbors
+
+# A* Algorithm
+def a_star(start, goal):
+    open_set = []
+    heapq.heappush(open_set, (0 + manhattan_distance(start, goal), 0, start, []))
+    visited = set()
+
+    while open_set:
+        f, g, current, path = heapq.heappop(open_set)
+
+        if current == goal:
+            return path
+
+        visited.add(state_to_tuple(current))
+
+        for neighbor, move in get_neighbors(current):
+            if state_to_tuple(neighbor) not in visited:
+                new_g = g + 1
+                new_f = new_g + manhattan_distance(neighbor, goal)
+                heapq.heappush(open_set, (new_f, new_g, neighbor, path + [move]))
+
+    return None
+
+# Initial configuration
+start_state = [[1, 2, 3],
+               [5, 0, 6],
+               [4, 7, 8]]
+
+# Solve puzzle
+solution = a_star(start_state, goal_state)
+
+if solution:
+    print("Steps to solve:")
+    for step in solution:
+        print(step)
+    print(f"\nTotal moves: {len(solution)}")
+else:
+    print("No solution found.")
