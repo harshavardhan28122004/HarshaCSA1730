@@ -1,0 +1,46 @@
+def print_board(board):
+    for row in board:
+        line = ""
+        for cell in row:
+            line += "Q " if cell else ". "
+        print(line)
+    print("\n")
+
+def is_safe(board, row, col):
+    # Check column
+    for i in range(row):
+        if board[i][col]:
+            return False
+
+    # Check left upper diagonal
+    for i, j in zip(range(row - 1, -1, -1), range(col - 1, -1, -1)):
+        if board[i][j]:
+            return False
+
+    # Check right upper diagonal
+    for i, j in zip(range(row - 1, -1, -1), range(col + 1, 8)):
+        if board[i][j]:
+            return False
+
+    return True
+
+def solve_n_queens(board, row):
+    if row == 8:
+        print_board(board)
+        return True  # Change to False if you want all solutions
+
+    for col in range(8):
+        if is_safe(board, row, col):
+            board[row][col] = 1
+            if solve_n_queens(board, row + 1):
+                return True
+            board[row][col] = 0  # backtrack
+
+    return False
+
+# Initialize 8x8 chessboard
+board = [[0 for _ in range(8)] for _ in range(8)]
+
+# Solve and display one solution
+if not solve_n_queens(board, 0):
+    print("No solution found.")
