@@ -1,0 +1,71 @@
+from collections import deque
+
+# Possible moves: (missionaries, cannibals)
+moves = [
+    (2, 0),
+    (0, 2),
+    (1, 0),
+    (0, 1),
+    (1, 1)
+]
+
+def is_valid(m_left, c_left, m_right, c_right):
+    if m_left < 0 or c_left < 0 or m_right < 0 or c_right < 0:
+        return False
+    if m_left > 0 and m_left < c_left:
+        return False
+    if m_right > 0 and m_right < c_right:
+        return False
+    return True
+
+def bfs():
+    start = (3, 3, 0)  # (M_left, C_left, Boat_side)
+    goal = (0, 0, 1)
+    
+    queue = deque()
+    queue.append((start, []))  # (state, path)
+    
+    visited = set()
+    visited.add(start)
+    
+    while queue:
+        (m_left, c_left, boat), path = queue.popleft()
+        
+        if (m_left, c_left, boat) == goal:
+            return path + [goal]
+        
+        # Try all possible moves
+        for m, c in moves:
+            if boat == 0:
+                # Move from left to right
+                new_state = (
+                    m_left - m,
+                    c_left - c,
+                    1
+                )
+                m_right = 3 - new_state[0]
+                c_right = 3 - new_state[1]
+            else:
+                # Move from right to left
+                new_state = (
+                    m_left + m,
+                    c_left + c,
+                    0
+                )
+                m_right = 3 - new_state[0]
+                c_right = 3 - new_state[1]
+            
+            if is_valid(new_state[0], new_state[1], m_right, c_right):
+                if new_state not in visited:
+                    visited.add(new_state)
+                    queue.append((new_state, path + [(m_left, c_left, boat)]))
+    return None
+
+def main():
+    solution = bfs()
+    if solution:
+        print("Solution found:")
+        for state in solution:
+            m_left, c_left, boat = state
+            m_right = 3 - m_left
+            c_ri_
