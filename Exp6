@@ -1,0 +1,33 @@
+def vacuum_cleaner(initial_state):
+    """
+    initial_state: (location, status_left, status_right)
+    location: "Left" or "Right"
+    status_left/status_right: "Clean" or "Dirty"
+    """
+    state = list(initial_state)
+    actions = []
+
+    while state[1] == "Dirty" or state[2] == "Dirty":
+        loc = state[0]
+        if loc == "Left":
+            if state[1] == "Dirty":
+                actions.append("Suck")
+                state[1] = "Clean"
+                print("Cleaned position Left")
+            elif state[2] == "Dirty":
+                actions.append("Move Right")
+                state[0] = "Right"
+        elif loc == "Right":
+            if state[2] == "Dirty":
+                actions.append("Suck")
+                state[2] = "Clean"
+                print("Cleaned position Right")
+            elif state[1] == "Dirty":
+                actions.append("Move Left")
+                state[0] = "Left"
+    print("All clean!")
+    print("Actions taken:", actions)
+
+if __name__ == "__main__":
+    # Example starting state:
+    # V
