@@ -1,0 +1,21 @@
+% student(StudentName).
+student(alice).
+student(bob).
+student(charlie).
+
+% teacher(TeacherName).
+teacher(smith).
+teacher(jones).
+teacher(clark).
+
+% subject(SubjectCode, SubjectName).
+subject(cs101, 'Computer Science').
+subject(ma102, 'Mathematics').
+subject(ph103, 'Physics').
+
+% teaches(TeacherName, SubjectCode).
+teaches(smith, cs101).
+teaches(jones, ma102).
+teaches(clark, ph103).
+
+% enrolled(StudentN
