@@ -1,0 +1,9 @@
+% sum_upto(N, Sum) succeeds when Sum is the sum of integers from 1 to N.
+
+sum_upto(0, 0).    % Base case: sum of numbers up to 0 is 0.
+
+sum_upto(N, Sum) :-
+    N > 0,
+    N1 is N - 1,
+    sum_upto(N1, Sum1),
+    Sum is Sum1 + N.
