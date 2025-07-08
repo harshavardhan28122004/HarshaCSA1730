@@ -1,0 +1,57 @@
+% Gender
+male(john).
+male(robert).
+male(michael).
+male(james).
+
+female(mary).
+female(linda).
+female(susan).
+female(patricia).
+
+% Parent relationships
+parent(john, robert).
+parent(mary, robert).
+
+parent(john, linda).
+parent(mary, linda).
+
+parent(robert, michael).
+parent(susan, michael).
+
+parent(robert, patricia).
+parent(susan, patricia).
+
+% Rules
+father(F, C) :- 
+    male(F), 
+    parent(F, C).
+
+mother(M, C) :- 
+    female(M), 
+    parent(M, C).
+
+grandparent(GP, C) :- 
+    parent(GP, P), 
+    parent(P, C).
+
+grandfather(GF, C) :- 
+    male(GF), 
+    grandparent(GF, C).
+
+grandmother(GM, C) :- 
+    female(GM), 
+    grandparent(GM, C).
+
+sibling(X, Y) :- 
+    parent(P, X), 
+    parent(P, Y),
+    X \= Y.
+
+brother(B, X) :- 
+    male(B), 
+    sibling(B, X).
+
+sister(S, X) :- 
+    female(S), 
+    sibling(S, X).
