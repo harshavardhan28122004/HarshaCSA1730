@@ -1,0 +1,13 @@
+% Facts: person(Name, ADB, DOB).
+person('Alice', 15000, date(1995, 4, 12)).
+person('Bob', 9800, date(2000, 6, 25)).
+person('Charlie', 21000, date(1998, 11, 5)).
+
+% Rule: find people with ADB greater than a certain value
+high_adb_persons(MinADB, Name) :-
+    person(Name, ADB, _),
+    ADB > MinADB.
+
+% Rule: find DOB of a person
+get_dob(Name, DOB) :-
+    person(Name, _, DOB).
